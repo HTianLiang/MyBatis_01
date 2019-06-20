@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--写sql语句
+    namespace：命名空间
+-->
+<mapper namespace="soft.demo2.UserMapper">
+    <select id="findUserById" parameterType="Integer" resultType="soft.demo1.pojo.User">
+        <!--MyBatis占位符：#{参数} 不同与jdbc 参数可随便填写 例：v、n...-->
+        select * from USER where id= #{n}
+    </select>
+    <!--根据用户名称模糊查询用户列表
+        ${参数} 字符串拼接 参数只能填写value
+        若改写成："%"#{参数}"%" 里边参数就可随意填写
+    -->
+    <select id="findUserByUsername" parameterType="String" resultType="soft.demo1.pojo.User">
+        select * from USER where username like "%"#{str}"%"
+    </select>
+    <!--新增用户-->
+    <insert id="insertUser" parameterType="soft.demo1.pojo.User">
+        <!--获取刚刚新增用户ID-->
+        <selectKey keyProperty="id" resultType="Integer" order="AFTER">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into user(username,birthday,sex,address)
+        values (#{username},#{birthday},#{sex},#{address})
+    </insert>
+    <!--修改用户-->
+    <update id="updateUserById" parameterType="soft.demo1.pojo.User">
+        update user set username=#{username},birthday=#{birthday},sex=#{sex},address=#{address}
+        where id=#{id}
+    </update>
+    <!--删除用户-->
+    <delete id="deleteUserById" parameterType="Integer">
+        delete from user where id = #{i}
+    </delete>
+</mapper>
